@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NodeJS Talks</title>
+  </head>
+  <body>
+    <h1>CSS is out of town today...</h1>
+    <section id="product-form">
+      <form id="add-product">
+        <h3>Add a product to your new order:</h3>
+        <label for="product-name">Product name:</label>
+        <input id="product-name" type="text" />
+        <label for="product-price">Product price:</label>
+        <input id="product-price" type="text" />
+        <input type="submit" value="Add" />
+      </form>
+    </section>
+    <script>
+      console.log("in script???");
+      const form = document.querySelector("#add-product");
+      const productName = document.querySelector("#product-name");
+      const productPrice = document.querySelector("#product-price");
+      form.addEventListener("submit", async (event) => {
+        console.log("callingggg");
+        event.preventDefault();
+        console.log(productName.value);
+        console.log(productPrice.value);
+        const name = productName.value;
+        const price = productPrice.value;
+        await fetch("http://localhost:8080/product", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            price,
+          }),
+        });
+      });
+    </script>
+  </body>
+</html>

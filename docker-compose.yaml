@@ -1,0 +1,72 @@
+
+version: "3.8"
+services:
+    webapp:
+        build:
+            context: ./app
+        ports:
+            - "8080:8080"
+        depends_on:
+          - api-gateway
+    order-service:
+        build:
+            context: ./services/order
+        ports:
+          - "4001:4001"
+        environment: 
+          - MONGODB_CONNSTRING=mongodb+srv://georgecr98:Hesoyam_982022@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
+          - NATS_URI=nats://nats:4222
+        depends_on:
+          - nats
+    product-service:
+        build:
+            context: ./services/product
+        ports:
+          - "4000:4000"
+        environment: 
+          - MONGODB_CONNSTRING=mongodb+srv://georgecr98:Hesoyam_982022@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
+          - NATS_URI=nats://nats:4222
+        depends_on:
+          - nats
+    api-gateway:
+        build:
+            context: ./api-gateway
+        ports:
+          - "6000:6000"
+    authentication-service:
+        build:
+          context: ./authentication-service
+        ports:
+            - "9000:9000"
+        depends_on:
+          - api-gateway
+    authorization-service:
+        build:
+          context: ./authorization-service
+        ports:
+            - "8000:8000"
+        depends_on:
+          - api-gateway
+          - authentication-service
+    nginx:
+        restart: always
+        build:
+            context: ./proxy
+        ports:
+            - "80:80"
+    nats:
+        image: nats
+        restart: always
+        expose:
+          - "4222"
+        ports:
+          - "8222:8222"
+          - "4222:4222"
+        hostname: nats-server
+    order-db:
+        image: mongo:latest
+        ports:
+          - "27017:27017"
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME=georgecr98
+          - MONGO_INITDB_ROOT_PASSWORD=Hesoyam_982022
