@@ -14,7 +14,7 @@ services:
         ports:
           - "4001:4001"
         environment: 
-          - MONGODB_CONNSTRING=mongodb+srv://username:password@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
+          - MONGODB_CONNSTRING=mongodb+srv://<username>:<password@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
           - NATS_URI=nats://nats:4222
         depends_on:
           - nats
@@ -24,7 +24,7 @@ services:
         ports:
           - "4000:4000"
         environment: 
-          - MONGODB_CONNSTRING=mongodb+srv://username:password@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
+          - MONGODB_CONNSTRING=mongodb+srv://<username>:<password>@nodejstalks.dxfpnrm.mongodb.net/?retryWrites=true&w=majority
           - NATS_URI=nats://nats:4222
         depends_on:
           - nats
@@ -68,5 +68,5 @@ services:
         ports:
           - "27017:27017"
         environment:
-          - MONGO_INITDB_ROOT_USERNAME=
-          - MONGO_INITDB_ROOT_PASSWORD=
+          - MONGO_INITDB_ROOT_USERNAME=<username>
+          - MONGO_INITDB_ROOT_PASSWORD=<password>

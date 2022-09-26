@@ -18,16 +18,11 @@ const ROUTES = [
       },
       selfHandleResponse: true,
       onProxyReq: (proxyReq, req, res) => {
-        console.log("test", proxyReq.headers);
-        console.log("testsdadsdas", req.headers);
       },
       onProxyRes: responseInterceptor(
         async (responseBuffer, proxyRes, req, res) => {
           try {
-            console.log(req.body, "body here?");
-            console.log(req.headers, "headerezzz");
             const isAuthenticated = proxyRes.statusCode === 200 || false;
-            console.log(proxyRes.statusCode);
             if (!isAuthenticated) {
               return JSON.stringify({
                 isAuthenticated,
@@ -51,8 +46,6 @@ const ROUTES = [
               }
             );
             const isAuthorized = authzResult.status === 200 || false;
-            console.log(authzResult.status);
-            console.log("body", req.body);
             if (!isAuthorized) {
               res.statusCode = authzResult.status;
               res.statusMessage = "Unauthorized";
@@ -82,7 +75,7 @@ const ROUTES = [
               created: true,
             });
           } catch (err) {
-            console.log(err, "wtf?????");
+            console.log(err, "oh no");
           }
         }
       ),

@@ -8,7 +8,7 @@ const cors = require("koa2-cors");
 const fs = require("fs");
 
 const sessionConfig = {
-  key: "nodejstalks.sess",
+  key: "programmersweek2022.sess",
   maxAge: 86400000,
   autoCommit: true,
   overwrite: true,
@@ -27,10 +27,10 @@ app.use(bodyParser());
 const authRouter = new Router({ prefix: "/auth" });
 const commonRouter = new Router();
 
-const CLIENT_ID = "D3uy2sXRXcZtrZWCUKM6DooeDSgeinHh";
+const CLIENT_ID = "your_client_id";
 const CLIENT_SECRET =
-  "CLdFcdhBhp4Yscs7fwCIbDMbnn2dpZoTt-SskDSi1GtDxa7mQ9rkVDWmSJ4MMb0u";
-const AUTHZ_URL = `https://dev-3w0up8av.us.auth0.com/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=http://localhost:8080/auth/callback&scope=openid%20email%20profile&state=value`;
+  "your_client_Secret";
+const AUTHZ_URL = `<your_domain>/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=http://localhost:8080/auth/callback&scope=openid%20email%20profile&state=value`;
 
 authRouter.get("/start", (ctx) => {
   ctx.redirect(AUTHZ_URL);
@@ -45,14 +45,12 @@ authRouter.get("/callback", async (ctx) => {
     CLIENT_SECRET
   );
   const { id_token, access_token, scope } = tokens;
+  console.log("tokens here", tokens);
   ctx.session.auth = {
     idToken: id_token,
     accessToken: access_token,
     scope,
   };
-  console.log(authzCode);
-  console.log(tokens);
-  console.log("after saving", ctx.session.auth);
   ctx.body = "Callback - Fetched the tokens";
 });
 
@@ -61,12 +59,18 @@ commonRouter.get("/product/add", (ctx) => {
 });
 
 commonRouter.post("/product", async (ctx) => {
+  console.log("getting in product request");
   const { name, price } = ctx.request.body;
-  // console.log(ctx.session.auth, "authhh");
-  console.log(name, price, "data from fe");
-  // ctx.session.auth = {};
+  console.log("session", ctx.session);
+  if (!ctx.session.auth) {
+    ctx.status = 401;
+
+    ctx.body = {
+      error: "User is not logged in",
+    };
+    return;
+  }
   const { idToken, accessToken, scope } = ctx.session.auth;
-  console.log(ctx.session.auth, "authhh");
   const result = await fetch("http://api-gateway:6000/product", {
     method: "POST",
     headers: {
@@ -83,7 +87,6 @@ commonRouter.post("/product", async (ctx) => {
     }),
   });
   const data = await result.json();
-  console.log("result here what", data);
   ctx.body = "Received result " + JSON.stringify(data);
 });
 

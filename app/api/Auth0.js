@@ -24,7 +24,6 @@ class Auth0 extends Auth {
       const text = await result.text();
       throw new Error(text);
     }
-    console.log(result);
     return result.json();
   }
 }

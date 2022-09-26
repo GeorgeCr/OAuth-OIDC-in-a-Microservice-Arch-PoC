@@ -3,6 +3,7 @@ import bodyParser from "koa-bodyparser";
 import Router from "@koa/router";
 import nats from "nats";
 import mongoose from "mongoose";
+import Order from "./model/index.js";
 
 const nc = await nats.connect({ servers: process.env.NATS_URI });
 
@@ -13,7 +14,6 @@ mongoose.connect(
   },
   (err) => {
     if (err) {
-      console.log(err, "wut happened here :(");
       process.exit(1);
     }
   }
@@ -24,13 +24,6 @@ const sub = nc.subscribe("PRODUCT_CREATED");
 for await (const m of sub) {
   const product = jc.decode(m.data);
   const { name, price } = product;
-
-  const Order = mongoose.model("Order", {
-    product: {
-      name: String,
-      price: String,
-    },
-  });
 
   const toInsertOrder = new Order({
     product: {
@@ -57,7 +50,6 @@ router.get("/health", (ctx) => {
 
 router.post("/order/:id", async (ctx) => {
   const { id } = ctx.params;
-  console.log("in docker?");
   ctx.body = `Product number ${id}`;
 });
 

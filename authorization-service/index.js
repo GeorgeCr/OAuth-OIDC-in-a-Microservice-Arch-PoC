@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/authorize", (ctx) => {
   const serviceScope = "email openid profile";
-  // auth checks - check access token expiry, match the scopes, check the role/group mapping on scopes (maybe)
+  // auth checks - check access token expiry, match the scopes, check the role/group mapping on scopes
   let claimedScope;
   let accessToken;
   if (ctx.request.headers["x-scope"]) {
@@ -25,19 +25,8 @@ router.post("/authorize", (ctx) => {
       ?.split("Bearer")[1]
       .trim();
   }
-  // const claimedScope = ctx.request.headers["x-scope"]
-  //   .split(" ")
-  //   .map((scopeFragment) => scopeFragment.trim())
-  //   .filter(Boolean)
-  //   .sort()
-  //   .join(" ");
-  // const a
-  console.log(claimedScope, accessToken);
 
   let isAuthz = false;
-  // const decodedToken = jwt.decode(accessToken);
-  // console.log("decoded token", decodedToken);
-  console.log(claimedScope, serviceScope);
   if (accessToken && claimedScope === serviceScope) {
     isAuthz = true;
   }
@@ -45,7 +34,6 @@ router.post("/authorize", (ctx) => {
   ctx.body = {
     authorized: isAuthz,
   };
-  // send some body too
 });
 
 app.use(router.routes()).use(router.allowedMethods());

@@ -19,15 +19,11 @@
       </form>
     </section>
     <script>
-      console.log("in script???");
       const form = document.querySelector("#add-product");
       const productName = document.querySelector("#product-name");
       const productPrice = document.querySelector("#product-price");
       form.addEventListener("submit", async (event) => {
-        console.log("callingggg");
         event.preventDefault();
-        console.log(productName.value);
-        console.log(productPrice.value);
         const name = productName.value;
         const price = productPrice.value;
         await fetch("http://localhost:8080/product", {

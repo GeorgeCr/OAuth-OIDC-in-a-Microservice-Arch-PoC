@@ -3,6 +3,7 @@ import bodyParser from "koa-bodyparser";
 import Router from "@koa/router";
 import nats from "nats";
 import mongoose from "mongoose";
+import Product from "./model/index.js";
 
 // Message Queue
 
@@ -34,9 +35,6 @@ router.post("/product", async (ctx) => {
   // const { name, price } = ctx.request.body;
   const name = ctx.request.headers["x-product-name"];
   const price = ctx.request.headers["x-product-price"];
-  console.log("headers in product", name, price, ctx.request.headers)
-
-  const Product = mongoose.model("Product", { name: String, price: String });
 
   const toInsertProduct = new Product({ name, price });
   await toInsertProduct.save();

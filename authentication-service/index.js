@@ -10,16 +10,13 @@ const router = Router();
 router.post("/authenticate", async (ctx) => {
   // auth checks - check id token sig, check the role/group
   // const idToken = ctx.headers["x-id-token"];
-  console.log("headrs in authhh", ctx.request.headers);
   const idToken = ctx.request.headers["x-id-token"];
   const result = await fetch(
     "https://dev-3w0up8av.us.auth0.com/.well-known/jwks.json"
   );
   const jwtWebKeySet = await result.json();
-  console.log(jwtWebKeySet);
   const [firstSet, secondSet] = jwtWebKeySet.keys;
   const publicKey = firstSet.x5c[0];
-  console.log("public key", publicKey);
   // const decoded = jwt.verify(
   //   idToken,
   //   `-----BEGIN CERTIFICATE-----
